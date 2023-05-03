@@ -29,7 +29,8 @@ const player = {
     y: canvas.height - 100,
     w: 50,
     h: 100,
-    isLiving: true         
+    isLiving: true,
+    colisionsNumber: 0         
 }
 
 const obstacle = {
@@ -40,12 +41,12 @@ const obstacle = {
 }
 
 const renderPlayer = () => {
-    context.fillStyle = "#940d8b"
+    context.fillStyle = '#940d8b'
     context.fillRect(player.x, player.y, player.w, player.h)
 }
 
 const renderObstacle = () => {
-    context.fillStyle = "#000"
+    context.fillStyle = '#000'
     context.fillRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h)
     if (obstacle.x >= obstacle.w * (- 1)) {
         obstacle.x -= 1 * velocity
@@ -80,19 +81,27 @@ const verifyColision = () => {
         && obstacle.y < player.y + player.h + margin 
         && obstacle.y + obstacle.h + margin > player.y) {
             player.isLiving = false
-            setTimeout(() => {
-                obstacle.x = canvas.width
-                player.isLiving = true
-            }, 1000)
+            player.colisionsNumber += 1
+            if (player.colisionsNumber <= 5) {
+                setTimeout(() => {
+                    obstacle.x = canvas.width
+                    player.isLiving = true
+                }, 1000)
+            } else {
+                alert('Game Over!!')
+            }
     }
 }
 
 const clear = () => {
-    context.fillStyle = "#5eaae0"
+    context.fillStyle = '#5eaae0'
     context.fillRect(0, 0, canvas.width, canvas.height)
 }
 
 const renderLoop = () => {
+    document.getElementById('colision-label')
+        .innerHTML = `Número de colisões: ${player.colisionsNumber} / 5`
+
     if (player.isLiving) {
         clear()
         renderPlayer()
