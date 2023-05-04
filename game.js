@@ -35,9 +35,9 @@ const player = {
 
 const obstacle = {
     x: canvas.width,
-    y: canvas.height - 100,
+    y: canvas.height - 50,
     w: 50,
-    h: 100,
+    h: 50
 }
 
 const renderPlayer = () => {
@@ -52,6 +52,8 @@ const renderObstacle = () => {
         obstacle.x -= 1 * velocity
     } else {
         obstacle.x = canvas.width
+        obstacle.h = Math.floor(Math.random() * 100) + 5
+        obstacle.y = canvas.height - obstacle.h
     }
 }
 
@@ -65,8 +67,8 @@ const addGravity = () => {
 
 const startTimer = () => {
     velocityIntervalId = setInterval(() => {
-        velocity += 1
-    }, 10000)
+        velocity += 2
+    }, 5000)
 
     setTimeout(() => {
         clearInterval(velocityIntervalId)
@@ -75,14 +77,14 @@ const startTimer = () => {
 }
 
 const verifyColision = () => {
-    let margin = -2
+    let margin = -10
     if (obstacle.x < player.x + player.w + margin
         && obstacle.x + obstacle.w + margin > player.x 
         && obstacle.y < player.y + player.h + margin 
         && obstacle.y + obstacle.h + margin > player.y) {
             player.isLiving = false
             player.colisionsNumber += 1
-            if (player.colisionsNumber <= 5) {
+            if (player.colisionsNumber <= 3) {
                 setTimeout(() => {
                     obstacle.x = canvas.width
                     player.isLiving = true
@@ -100,7 +102,7 @@ const clear = () => {
 
 const renderLoop = () => {
     document.getElementById('colision-label')
-        .innerHTML = `Número de colisões: ${player.colisionsNumber} / 5`
+        .innerHTML = `Número de colisões: ${player.colisionsNumber} / 3`
 
     if (player.isLiving) {
         clear()
